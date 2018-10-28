@@ -6,6 +6,20 @@ JSON Prettier Printer that occupies a minimal number of lines while pretty-print
 ![screenshot from 2018-10-28 16-57-16](https://user-images.githubusercontent.com/9353584/47613438-bb96a700-dad2-11e8-872c-4309d4330aef.png)
 This `example.json` cites from https://json.org/example.html
 
+## Instalation
+### Homebrew
+```
+$ brew install tanishiking/jpp/jpp
+```
+
+### Download binary from GitHub Releases
+https://github.com/tanishiking/jpp/releases
+
+### Build from source
+```
+$ go get -u github.com/tanishiking/jpp
+```
+
 ## jpp command
 ### Options
 - `-w`: width (default: your terminal width)
