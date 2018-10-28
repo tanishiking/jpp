@@ -1,6 +1,11 @@
 # jpp [![Build Status](https://travis-ci.org/tanishiking/jpp.svg?branch=master)](https://travis-ci.org/tanishiking/jpp)
 JSON Prettier Printer that occupies a minimal number of lines while pretty-printing given JSON, using [prettier](https://github.com/tanishiking/prettier) which is Go implementation of [Wadler's "A Prettier Printer"](http://homepages.inf.ed.ac.uk/wadler/papers/prettier/prettier.pdf).
 
+`jpp` is quite useful when we want to pretty print the JSON whose each node has a lot of children scalar values.
+
+![screenshot from 2018-10-28 16-57-16](https://user-images.githubusercontent.com/9353584/47613438-bb96a700-dad2-11e8-872c-4309d4330aef.png)
+This `example.json` cites from https://json.org/example.html
+
 ## jpp command
 ### Options
 - `-w`: width (default: your terminal width)
