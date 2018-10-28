@@ -8,6 +8,17 @@ JSON Prettier Printer that occupies a minimal number of lines while pretty-print
   - It just attempts to keep lines within this length when possible.
 - `-i`: indent string (default: `'  '`)
 
+### Environment Variables
+You can specify ANSI color to output colorized or SGR defined output to the standard output using following environment variables.
+
+- `JPP_NULL`
+- `JPP_BOOL`
+- `JPP_NUMBER`
+- `JPP_STRING`
+- `JPP_FIELDNAME`
+
+See: http://ascii-table.com/ansi-escape-sequences.php
+
 ```
 $ go get -u github.com/tanishiking/jpp/cmd/jpp
 $ cat numbers.json
@@ -54,7 +65,7 @@ func main() {
   [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 ]
 ]
 `
-	res, _ := jpp.Pretty(jsonStr, "  ", 20)
+	res, _ := jpp.Pretty(jsonStr, "  ", 20, nil)
 	fmt.Println(res)
 	// [
 	//   [

@@ -11,12 +11,13 @@ import (
 )
 
 var (
-	indent string
-	width  int
+	indent   string
+	width    int
+	coloring *ColorScheme
 )
 
 // Pretty prettifies specified json string.
-func Pretty(jsonStr string, i string, w int) (string, error) {
+func Pretty(jsonStr string, i string, w int, colorScheme *ColorScheme) (string, error) {
 	if !gjson.Valid(jsonStr) {
 		return "", errors.New("parse error: Invalid json input")
 	}
@@ -24,6 +25,11 @@ func Pretty(jsonStr string, i string, w int) (string, error) {
 
 	indent = i
 	width = w
+	if colorScheme != nil {
+		coloring = colorScheme
+	} else {
+		coloring = DefaultScheme
+	}
 
 	var builder bytes.Buffer
 	prettyRec(&builder, 0, json)
@@ -33,15 +39,20 @@ func Pretty(jsonStr string, i string, w int) (string, error) {
 func prettyRec(b *bytes.Buffer, depth int, j gjson.Result) {
 	switch j.Type {
 	case gjson.Null:
-		b.WriteString("null")
+		color := coloring.Null
+		b.WriteString(color.Sprint("null"))
 	case gjson.False:
-		b.WriteString("false")
+		color := coloring.Bool
+		b.WriteString(color.Sprint("false"))
 	case gjson.Number:
-		b.WriteString(fmt.Sprintf("%v", j.Num))
+		color := coloring.Number
+		b.WriteString(color.Sprintf("%v", j.Num))
 	case gjson.String:
-		b.WriteString(fmt.Sprintf("\"%v\"", j.Str))
+		color := coloring.String
+		b.WriteString(color.Sprintf("\"%v\"", j.Str))
 	case gjson.True:
-		b.WriteString("true")
+		color := coloring.Bool
+		b.WriteString(color.Sprint("true"))
 	case gjson.JSON:
 		if j.IsArray() {
 			items := j.Array()
@@ -84,9 +95,11 @@ func prettyRec(b *bytes.Buffer, depth int, j gjson.Result) {
 				indentLength := len([]rune(indent))
 				sep := p.Concat([]p.Doc{p.Text(","), p.LineOrSpace()})
 				var kvs []p.Doc
+				color := coloring.FieldName
 				j.ForEach(func(k gjson.Result, v gjson.Result) bool {
+					length := len([]rune(k.Str))
 					kv := p.Concat([]p.Doc{
-						p.Text(fmt.Sprintf("\"%v\"", k.Str)),
+						p.TextWithLength(color.Sprintf("\"%v\"", k.Str), length),
 						p.Text(":"),
 						p.Text(" "),
 						toDoc(v),
@@ -105,8 +118,9 @@ func prettyRec(b *bytes.Buffer, depth int, j gjson.Result) {
 			} else {
 				len := len(m)
 				i := 0
+				color := coloring.FieldName
 				j.ForEach(func(k gjson.Result, v gjson.Result) bool {
-					b.WriteString(fmt.Sprintf("\"%v\"", k.Str))
+					b.WriteString(color.Sprintf("\"%v\"", k.Str))
 					b.WriteString(":")
 					b.WriteString(" ")
 					prettyRec(b, depthInBracket, v)
@@ -138,15 +152,30 @@ func toDoc(j gjson.Result) p.Doc {
 	default:
 		return p.Empty()
 	case gjson.Null:
-		return p.Text("null")
+		color := coloring.Null
+		str := "null"
+		length := len([]rune(str))
+		return p.TextWithLength(color.Sprint(str), length)
 	case gjson.False:
-		return p.Text("false")
+		color := coloring.Bool
+		str := "false"
+		length := len([]rune(str))
+		return p.TextWithLength(color.Sprint(str), length)
 	case gjson.Number:
-		return p.Text(fmt.Sprintf("%v", j.Num))
+		color := coloring.Number
+		str := fmt.Sprintf("%v", j.Num)
+		length := len([]rune(str))
+		return p.TextWithLength(color.Sprint(str), length)
 	case gjson.String:
-		return p.Text(fmt.Sprintf("\"%v\"", j.Str))
+		color := coloring.String
+		str := fmt.Sprintf("\"%v\"", j.Str)
+		length := len([]rune(str))
+		return p.TextWithLength(color.Sprint(str), length)
 	case gjson.True:
-		return p.Text("true")
+		color := coloring.Bool
+		str := "true"
+		length := len([]rune(str))
+		return p.TextWithLength(color.Sprint(str), length)
 	}
 }
 

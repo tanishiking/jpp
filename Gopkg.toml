@@ -26,8 +26,12 @@
 
 
 [[constraint]]
+  name = "github.com/fatih/color"
+  version = "1.7.0"
+
+[[constraint]]
   name = "github.com/tanishiking/prettier"
-  version = "0.0.1"
+  version = "0.0.3"
 
 [[constraint]]
   name = "github.com/tidwall/gjson"

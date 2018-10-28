@@ -6,10 +6,43 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
 
+	"github.com/fatih/color"
 	"golang.org/x/crypto/ssh/terminal"
 	"github.com/tanishiking/jpp"
 )
+
+var (
+	defaultNull      = color.New()
+	defaultBool      = color.New()
+	defaultNumber    = color.New()
+	defaultString    = color.New(color.FgGreen)
+	defaultFieldName = color.New(color.FgBlue, color.Bold)
+)
+
+var (
+	defaultCLIScheme = &jpp.ColorScheme{
+		Null:      getColor("JPP_NULL", defaultNull),
+		Bool:      getColor("JPP_BOOL", defaultBool),
+		Number:    getColor("JPP_NUMBER", defaultNumber),
+		String:    getColor("JPP_STRING", defaultString),
+		FieldName: getColor("JPP_FIELDNAME", defaultFieldName),
+	}
+)
+
+func getColor(envvar string, fallback *color.Color) *color.Color {
+	v := os.Getenv(envvar)
+	if v != "" {
+		i, err := strconv.Atoi(v)
+		if err != nil {
+			return fallback
+		}
+		attr := color.Attribute(i)
+		return color.New(attr)
+	}
+	return fallback
+}
 
 type cli struct {
 	inStream             io.Reader
@@ -57,7 +90,7 @@ func (c *cli) run(args []string) int {
 		output = append(output, input)
 	}
 	jsonStr := string(output)
-	res, err := jpp.Pretty(jsonStr, indent, width)
+	res, err := jpp.Pretty(jsonStr, indent, width, defaultCLIScheme)
 	if err != nil {
 		fmt.Fprintln(c.errStream, err.Error())
 		return 1

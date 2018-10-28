@@ -15,7 +15,7 @@ func Example() {
   [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 ]
 ]
 `
-	res, _ := jpp.Pretty(jsonStr, "  ", 20)
+	res, _ := jpp.Pretty(jsonStr, "  ", 20, nil)
 	fmt.Println(res)
 	// [
 	//   [
@@ -48,7 +48,7 @@ func TestPretty_PreserveOrder(t *testing.T) {
   "world": 5,
   "numbers": [1,2,3,4,5]
 }`
-	actual, _ := jpp.Pretty(jsonStr, "  ", 20)
+	actual, _ := jpp.Pretty(jsonStr, "  ", 20, nil)
 	expected := `{
   "foo": 1,
   "bar": 2,
@@ -83,7 +83,7 @@ func TestPretty_Indent(t *testing.T) {
   "flag1": true,
   "flag2": false
 }`
-	actual, _ := jpp.Pretty(jsonStr, "    ", 20)
+	actual, _ := jpp.Pretty(jsonStr, "    ", 20, nil)
 	expected := `{
     "characters": [
         {
@@ -125,7 +125,7 @@ func TestPretty_Width(t *testing.T) {
   "flag1": true,
   "flag2": false
 }`
-	actual, _ := jpp.Pretty(jsonStr, "    ", 100)
+	actual, _ := jpp.Pretty(jsonStr, "    ", 100, nil)
 	expected := `{
     "characters": [
         {
