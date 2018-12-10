@@ -56,26 +56,33 @@ func prettyRec(b *bytes.Buffer, depth int, j gjson.Result) {
 	case gjson.JSON:
 		if j.IsArray() {
 			items := j.Array()
-			b.WriteString("[")
-			depthInBracket := depth + 1
-			newline(b, indent, depthInBracket)
 			if allElemsAreScalar(items) {
+				// Try to fit the json array in a single line
+				// if all items are scalar values.
 				indentLength := len([]rune(indent))
 				sep := p.Concat([]p.Doc{p.Text(","), p.LineOrSpace()})
 				ds := make([]p.Doc, 0, len(items))
 				for _, item := range items {
 					ds = append(ds, toDoc(item))
 				}
-				doc := p.Intercalate(sep, ds)
+				doc := p.TightBracketBy(
+					p.Text("["),
+					p.Text("]"),
+					p.Intercalate(sep, ds),
+					uint(indentLength),
+				)
 				layout := strings.Replace(
-					p.Pretty(width-indentLength*depthInBracket, doc),
+					p.Pretty(width-indentLength*depth, doc),
 					"\n",
-					fmt.Sprintf("\n%v", strings.Repeat(indent, depthInBracket)),
+					fmt.Sprintf("\n%v", strings.Repeat(indent, depth)),
 					-1,
 				)
 				b.WriteString(layout)
 			} else {
 				len := len(items)
+				b.WriteString("[")
+				depthInBracket := depth + 1
+				newline(b, indent, depthInBracket)
 				for i, item := range items {
 					prettyRec(b, depthInBracket, item)
 					if i != len-1 {
@@ -83,15 +90,14 @@ func prettyRec(b *bytes.Buffer, depth int, j gjson.Result) {
 						newline(b, indent, depthInBracket)
 					}
 				}
+				newline(b, indent, depth)
+				b.WriteString("]")
 			}
-			newline(b, indent, depth)
-			b.WriteString("]")
 		} else {
-			b.WriteString("{")
-			depthInBracket := depth + 1
-			newline(b, indent, depthInBracket)
 			m := j.Map()
 			if allValuesAreScalar(m) {
+				// Try to fit the json object in a single line
+				// if all values of the json object are scalar values.
 				indentLength := len([]rune(indent))
 				sep := p.Concat([]p.Doc{p.Text(","), p.LineOrSpace()})
 				var kvs []p.Doc
@@ -107,15 +113,23 @@ func prettyRec(b *bytes.Buffer, depth int, j gjson.Result) {
 					kvs = append(kvs, kv)
 					return true
 				})
-				doc := p.Fill(sep, kvs)
+				doc := p.TightBracketBy(
+					p.Text("{"),
+					p.Text("}"),
+					p.Fill(sep, kvs),
+					uint(indentLength),
+				)
 				layout := strings.Replace(
-					p.Pretty(width-indentLength*depthInBracket, doc),
+					p.Pretty(width-indentLength*depth, doc),
 					"\n",
-					fmt.Sprintf("\n%v", strings.Repeat(indent, depthInBracket)),
+					fmt.Sprintf("\n%v", strings.Repeat(indent, depth)),
 					-1,
 				)
 				b.WriteString(layout)
 			} else {
+				b.WriteString("{")
+				depthInBracket := depth + 1
+				newline(b, indent, depthInBracket)
 				len := len(m)
 				i := 0
 				color := coloring.FieldName
@@ -131,9 +145,9 @@ func prettyRec(b *bytes.Buffer, depth int, j gjson.Result) {
 					i++
 					return true
 				})
+				newline(b, indent, depth)
+				b.WriteString("}")
 			}
-			newline(b, indent, depth)
-			b.WriteString("}")
 		}
 	}
 }

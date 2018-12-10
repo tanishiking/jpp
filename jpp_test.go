@@ -55,9 +55,7 @@ func TestPretty_PreserveOrder(t *testing.T) {
   "baz": 3,
   "hello": 4,
   "world": 5,
-  "numbers": [
-    1, 2, 3, 4, 5
-  ]
+  "numbers": [1, 2, 3, 4, 5]
 }`
 	if actual != expected {
 		t.Errorf("expected: %v, actual: %v", expected, actual)
@@ -128,16 +126,190 @@ func TestPretty_Width(t *testing.T) {
 	actual, _ := jpp.Pretty(jsonStr, "    ", 100, nil)
 	expected := `{
     "characters": [
-        {
-            "name": "foo", "age": 25, "description": "bar"
-        },
-        {
-            "name": "baz", "age": 100, "description": "foo"
-        }
+        {"name": "foo", "age": 25, "description": "bar"},
+        {"name": "baz", "age": 100, "description": "foo"}
     ],
     "title": "foobar",
     "flag1": true,
     "flag2": false
+}`
+	if actual != expected {
+		t.Errorf("expected: %v, actual: %v", expected, actual)
+	}
+}
+
+func TestPretty_JSONArray_TryToFitInSingleLine(t *testing.T) {
+	jsonStr := `
+{
+  "numbers": [[1,2,3,4,5], [6,7,8,9,10]]
+}`
+	actual, _ := jpp.Pretty(jsonStr, "  ", 100, nil)
+	expected := `{
+  "numbers": [
+    [1, 2, 3, 4, 5],
+    [6, 7, 8, 9, 10]
+  ]
+}`
+	if actual != expected {
+		t.Errorf("expected: %v, actual: %v", expected, actual)
+	}
+}
+
+func TestPretty_JSONArray_TryToFitInSingleLine_Fallback(t *testing.T) {
+	jsonStr := `
+{
+  "numbers": [[1,2,3,4,5], [6,7,8,9,10]]
+}`
+	actual, _ := jpp.Pretty(jsonStr, "  ", 15, nil)
+	expected := `{
+  "numbers": [
+    [
+      1, 2, 3,
+      4, 5
+    ],
+    [
+      6, 7, 8,
+      9, 10
+    ]
+  ]
+}`
+	if actual != expected {
+		t.Errorf("expected: %v, actual: %v", expected, actual)
+	}
+}
+
+func TestPretty_JSONArray_Nested(t *testing.T) {
+	jsonStr := `
+{
+  "numbers": [[1,2,3,4,[5]], [6,7,8,9,10]]
+}`
+	actual, _ := jpp.Pretty(jsonStr, "  ", 100, nil)
+	expected := `{
+  "numbers": [
+    [
+      1,
+      2,
+      3,
+      4,
+      [5]
+    ],
+    [6, 7, 8, 9, 10]
+  ]
+}`
+	if actual != expected {
+		t.Errorf("expected: %v, actual: %v", expected, actual)
+	}
+}
+
+func TestPretty_JSONObject_TryToFitInSingleLine(t *testing.T) {
+	jsonStr := `
+{
+  "mappings": {
+    "_doc": {
+      "properties": {
+        "title": {
+          "type": "text"
+        },
+        "name": {
+          "type": "text"
+        },
+        "age": {
+          "type": "integer"
+        },
+        "created": {
+          "type": "date"
+        }
+      }
+    }
+  }
+}`
+
+	actual, _ := jpp.Pretty(jsonStr, "  ", 100, nil)
+	expected := `{
+  "mappings": {
+    "_doc": {
+      "properties": {
+        "title": {"type": "text"},
+        "name": {"type": "text"},
+        "age": {"type": "integer"},
+        "created": {"type": "date"}
+      }
+    }
+  }
+}`
+	if actual != expected {
+		t.Errorf("expected: %v, actual: %v", expected, actual)
+	}
+}
+
+func TestPretty_JSONObject_TryToFitInSingleLine_Fallback(t *testing.T) {
+	jsonStr := `
+{
+  "mappings": {
+    "_doc": {
+      "properties": {
+        "title": {
+          "type": "text"
+        },
+        "name": {
+          "type": "text"
+        },
+        "age": {
+          "type": "integer"
+        },
+        "created": {
+          "type": "date"
+        }
+      }
+    }
+  }
+}`
+
+	actual, _ := jpp.Pretty(jsonStr, "  ", 20, nil)
+	expected := `{
+  "mappings": {
+    "_doc": {
+      "properties": {
+        "title": {
+          "type": "text"
+        },
+        "name": {
+          "type": "text"
+        },
+        "age": {
+          "type": "integer"
+        },
+        "created": {
+          "type": "date"
+        }
+      }
+    }
+  }
+}`
+	if actual != expected {
+		t.Errorf("expected: %v, actual: %v", expected, actual)
+	}
+}
+
+func TestPretty_JSONObject_TryToFitInSingleLine_Nested(t *testing.T) {
+	jsonStr := `
+{
+  "nest": {
+    "child1": {
+      "grandchild1": "test"
+    },
+    "child2": {
+      "grandchild1": "test"
+    }
+  }
+}`
+
+	actual, _ := jpp.Pretty(jsonStr, "  ", 100, nil)
+	expected := `{
+  "nest": {
+    "child1": {"grandchild1": "test"},
+    "child2": {"grandchild1": "test"}
+  }
 }`
 	if actual != expected {
 		t.Errorf("expected: %v, actual: %v", expected, actual)
