@@ -8,17 +8,17 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/fatih/color"
-	"golang.org/x/crypto/ssh/terminal"
+	au "github.com/logrusorgru/aurora"
 	"github.com/tanishiking/jpp"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 var (
-	defaultNull      = color.New()
-	defaultBool      = color.New()
-	defaultNumber    = color.New()
-	defaultString    = color.New(color.FgGreen)
-	defaultFieldName = color.New(color.FgBlue, color.Bold)
+	defaultNull      = jpp.NoColor
+	defaultBool      = jpp.NoColor
+	defaultNumber    = jpp.NoColor
+	defaultString    = jpp.Green
+	defaultFieldName = jpp.BoldBlue
 )
 
 var (
@@ -31,15 +31,56 @@ var (
 	}
 )
 
-func getColor(envvar string, fallback *color.Color) *color.Color {
+func getColor(envvar string, fallback jpp.ColoredFormat) jpp.ColoredFormat {
 	v := os.Getenv(envvar)
 	if v != "" {
-		i, err := strconv.Atoi(v)
-		if err != nil {
-			return fallback
+		switch v {
+		case "black":
+			return jpp.Black
+		case "red":
+			return jpp.Red
+		case "green":
+			return jpp.Green
+		case "brown":
+			return jpp.Brown
+		case "blue":
+			return jpp.Blue
+		case "magenta":
+			return jpp.Magenta
+		case "cyan":
+			return jpp.Cyan
+		case "gray":
+			return jpp.Gray
+		case "bold_black":
+			return jpp.BoldBlack
+		case "bold_red":
+			return jpp.BoldRed
+		case "bold_green":
+			return jpp.BoldGreen
+		case "bold_brown":
+			return jpp.BoldBrown
+		case "bold_blue":
+			return jpp.BoldBlue
+		case "bold_magenta":
+			return jpp.BoldMagenta
+		case "bold_cyan":
+			return jpp.BoldCyan
+		case "bold_gray":
+			return jpp.BoldGray
+		default:
+			i, err := strconv.Atoi(v)
+			if err != nil {
+				return fallback
+			}
+			c := au.Color(i)
+			if !c.IsValid() {
+				return fallback
+			}
+			f := func(format string, args ...interface{}) string {
+				return au.Sprintf(au.Colorize(format, c), args...)
+			}
+			return f
 		}
-		attr := color.Attribute(i)
-		return color.New(attr)
 	}
 	return fallback
 }

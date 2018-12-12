@@ -40,19 +40,19 @@ func prettyRec(b *bytes.Buffer, depth int, j gjson.Result) {
 	switch j.Type {
 	case gjson.Null:
 		color := coloring.Null
-		b.WriteString(color.Sprint("null"))
+		b.WriteString(color("null"))
 	case gjson.False:
 		color := coloring.Bool
-		b.WriteString(color.Sprint("false"))
+		b.WriteString(color("false"))
 	case gjson.Number:
 		color := coloring.Number
-		b.WriteString(color.Sprintf("%v", j.Num))
+		b.WriteString(color("%v", j.Num))
 	case gjson.String:
 		color := coloring.String
-		b.WriteString(color.Sprintf("\"%v\"", j.Str))
+		b.WriteString(color("\"%v\"", j.Str))
 	case gjson.True:
 		color := coloring.Bool
-		b.WriteString(color.Sprint("true"))
+		b.WriteString(color("true"))
 	case gjson.JSON:
 		if j.IsArray() {
 			items := j.Array()
@@ -79,13 +79,12 @@ func prettyRec(b *bytes.Buffer, depth int, j gjson.Result) {
 				)
 				b.WriteString(layout)
 			} else {
-				len := len(items)
 				b.WriteString("[")
 				depthInBracket := depth + 1
 				newline(b, indent, depthInBracket)
 				for i, item := range items {
 					prettyRec(b, depthInBracket, item)
-					if i != len-1 {
+					if i != len(items)-1 {
 						b.WriteString(",")
 						newline(b, indent, depthInBracket)
 					}
@@ -105,7 +104,7 @@ func prettyRec(b *bytes.Buffer, depth int, j gjson.Result) {
 				j.ForEach(func(k gjson.Result, v gjson.Result) bool {
 					length := len([]rune(k.Str))
 					kv := p.Concat([]p.Doc{
-						p.TextWithLength(color.Sprintf("\"%v\"", k.Str), length),
+						p.TextWithLength(color("\"%v\"", k.Str), length),
 						p.Text(":"),
 						p.Text(" "),
 						toDoc(v),
@@ -134,7 +133,7 @@ func prettyRec(b *bytes.Buffer, depth int, j gjson.Result) {
 				i := 0
 				color := coloring.FieldName
 				j.ForEach(func(k gjson.Result, v gjson.Result) bool {
-					b.WriteString(color.Sprintf("\"%v\"", k.Str))
+					b.WriteString(color("\"%v\"", k.Str))
 					b.WriteString(":")
 					b.WriteString(" ")
 					prettyRec(b, depthInBracket, v)
@@ -169,27 +168,27 @@ func toDoc(j gjson.Result) p.Doc {
 		color := coloring.Null
 		str := "null"
 		length := len([]rune(str))
-		return p.TextWithLength(color.Sprint(str), length)
+		return p.TextWithLength(color(str), length)
 	case gjson.False:
 		color := coloring.Bool
 		str := "false"
 		length := len([]rune(str))
-		return p.TextWithLength(color.Sprint(str), length)
+		return p.TextWithLength(color(str), length)
 	case gjson.Number:
 		color := coloring.Number
 		str := fmt.Sprintf("%v", j.Num)
 		length := len([]rune(str))
-		return p.TextWithLength(color.Sprint(str), length)
+		return p.TextWithLength(color(str), length)
 	case gjson.String:
 		color := coloring.String
 		str := fmt.Sprintf("\"%v\"", j.Str)
 		length := len([]rune(str))
-		return p.TextWithLength(color.Sprint(str), length)
+		return p.TextWithLength(color(str), length)
 	case gjson.True:
 		color := coloring.Bool
 		str := "true"
 		length := len([]rune(str))
-		return p.TextWithLength(color.Sprint(str), length)
+		return p.TextWithLength(color(str), length)
 	}
 }
 

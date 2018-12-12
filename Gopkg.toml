@@ -26,8 +26,8 @@
 
 
 [[constraint]]
-  name = "github.com/fatih/color"
-  version = "1.7.0"
+  branch = "master"
+  name = "github.com/logrusorgru/aurora"
 
 [[constraint]]
   name = "github.com/tanishiking/prettier"
