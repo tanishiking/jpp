@@ -1,5 +1,5 @@
 # jpp [![Build Status](https://travis-ci.org/tanishiking/jpp.svg?branch=master)](https://travis-ci.org/tanishiking/jpp)
-JSON Prettier Printer that occupies a minimal number of lines while pretty-printing given JSON, using [prettier](https://github.com/tanishiking/prettier) which is Go implementation of [Wadler's "A Prettier Printer"](http://homepages.inf.ed.ac.uk/wadler/papers/prettier/prettier.pdf).
+JSON Prettier Printer that occupies a minimal number of lines while pretty-printing given JSON, using [prettier](https://github.com/tanishiking/prettier) which is Go implementation of ["Wadler's "A Prettier Printer"](http://homepages.inf.ed.ac.uk/wadler/papers/prettier/prettier.pdf).
 
 `jpp` is quite useful when we want to pretty print the JSON whose each node has a lot of children scalar values.
 
@@ -28,7 +28,7 @@ $ go get -u github.com/tanishiking/jpp
 - `-i`: indent string (default: `'  '`)
 
 ### Environment Variables
-You can specify ANSI color to output colorized or SGR defined output to the standard output using following environment variables.
+We can specify the color of output string using following environment variables
 
 - `JPP_NULL`
 - `JPP_BOOL`
@@ -36,7 +36,28 @@ You can specify ANSI color to output colorized or SGR defined output to the stan
 - `JPP_STRING`
 - `JPP_FIELDNAME`
 
-See: http://ascii-table.com/ansi-escape-sequences.php
+and builtin colors:
+
+- `black`
+- `red`
+- `green`
+- `brown`
+- `blue`
+- `magenta`
+- `cyan`
+- `gray`
+- `bold_black`
+- `bold_red`
+- `bold_green`
+- `bold_brown`
+- `bold_blue`
+- `bold_magenta`
+- `bold_cyan`
+- `bold_gray`
+
+For example, `cat some.json | JPP_NUMBER=bold_red jpp`.
+In addition, we can specify complicated styles using SGR code.
+See: https://en.wikipedia.org/wiki/ANSI_escape_code
 
 ```
 $ go get -u github.com/tanishiking/jpp/cmd/jpp
