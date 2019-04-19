@@ -1,5 +1,6 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b43969558e8246b4a2e5167eff17f21d)](https://app.codacy.com/app/tanishiking/jpp?utm_source=github.com&utm_medium=referral&utm_content=tanishiking/jpp&utm_campaign=Badge_Grade_Dashboard)
-# jpp [![Build Status](https://travis-ci.org/tanishiking/jpp.svg?branch=master)](https://travis-ci.org/tanishiking/jpp)
+# jpp
+[![Build Status](https://travis-ci.org/tanishiking/jpp.svg?branch=master)](https://travis-ci.org/tanishiking/jpp) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b43969558e8246b4a2e5167eff17f21d)](https://app.codacy.com/app/tanishiking/jpp?utm_source=github.com&utm_medium=referral&utm_content=tanishiking/jpp&utm_campaign=Badge_Grade_Dashboard)
+
 JSON Prettier Printer that occupies a minimal number of lines while pretty-printing given JSON, using [prettier](https://github.com/tanishiking/prettier) which is Go implementation of ["Wadler's "A Prettier Printer"](http://homepages.inf.ed.ac.uk/wadler/papers/prettier/prettier.pdf).
 
 `jpp` is quite useful when we want to pretty print the JSON whose each node has a lot of children scalar values.
