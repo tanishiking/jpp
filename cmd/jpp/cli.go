@@ -29,6 +29,13 @@ var (
 		String:    getColor("JPP_STRING", defaultString),
 		FieldName: getColor("JPP_FIELDNAME", defaultFieldName),
 	}
+	monochrome = &jpp.ColorScheme{
+		Null:      jpp.NoColor,
+		Bool:      jpp.NoColor,
+		Number:    jpp.NoColor,
+		String:    jpp.NoColor,
+		FieldName: jpp.NoColor,
+	}
 )
 
 func getColor(envvar string, fallback jpp.ColoredFormat) jpp.ColoredFormat {
@@ -103,14 +110,16 @@ func (c *cli) run(args []string) int {
 	}
 
 	var (
-		indent string
-		width  int
+		indent  string
+		width   int
+		noColor bool
 	)
 
 	flags := flag.NewFlagSet("jpp", flag.ContinueOnError)
 	flags.SetOutput(c.errStream)
 	flags.IntVar(&width, "w", termWidth, "width")
 	flags.StringVar(&indent, "i", "  ", "indentation")
+	flags.BoolVar(&noColor, "no-color", false, "disable the output color")
 	err := flags.Parse(args[1:])
 	if err != nil {
 		return 1
@@ -131,7 +140,15 @@ func (c *cli) run(args []string) int {
 		output = append(output, input)
 	}
 	jsonStr := string(output)
-	res, err := jpp.Pretty(jsonStr, indent, width, defaultCLIScheme)
+
+	var colorScheme *jpp.ColorScheme
+	if noColor {
+		colorScheme = monochrome
+	} else {
+		colorScheme = defaultCLIScheme
+	}
+
+	res, err := jpp.Pretty(jsonStr, indent, width, colorScheme)
 	if err != nil {
 		fmt.Fprintln(c.errStream, err.Error())
 		return 1
