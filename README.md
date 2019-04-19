@@ -17,7 +17,7 @@ https://github.com/tanishiking/jpp/releases
 
 ### Build from source
 ```
-$ go get -u github.com/tanishiking/jpp
+$ go get -u github.com/tanishiking/jpp/cmd/jpp
 ```
 
 ## jpp command
