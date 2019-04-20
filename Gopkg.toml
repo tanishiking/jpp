@@ -26,8 +26,8 @@
 
 
 [[constraint]]
-  branch = "master"
   name = "github.com/logrusorgru/aurora"
+  version = "1.1"
 
 [[constraint]]
   name = "github.com/tanishiking/prettier"

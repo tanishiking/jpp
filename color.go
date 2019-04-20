@@ -74,9 +74,8 @@ func Cyan(format string, args ...interface{}) string {
 
 // Gray formats according to a format specifier and returns the resulting string colored by gray.
 func Gray(format string, args ...interface{}) string {
-	return au.Sprintf(au.Gray(format), args...)
+	return au.Sprintf(au.Gray(uint8(12), format), args...)
 }
-
 
 // BoldBlack formats according to a format specifier and returns the resulting bold string colored by black.
 func BoldBlack(format string, args ...interface{}) string {
@@ -115,5 +114,5 @@ func BoldCyan(format string, args ...interface{}) string {
 
 // BoldGray formats according to a format specifier and returns the resulting bold string colored by gray.
 func BoldGray(format string, args ...interface{}) string {
-	return au.Sprintf(au.Colorize(format, au.GrayFg|au.BoldFm), args...)
+	return au.Sprintf(au.Colorize(au.Gray(uint8(12), format), au.BoldFm), args...)
 }
