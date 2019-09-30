@@ -2,6 +2,7 @@ package jpp
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
@@ -46,7 +47,7 @@ func prettyRec(b *bytes.Buffer, depth int, j gjson.Result) {
 		b.WriteString(color("false"))
 	case gjson.Number:
 		color := coloring.Number
-		b.WriteString(color("%v", j.Num))
+		b.WriteString(color(formatNum(j.Num)))
 	case gjson.String:
 		color := coloring.String
 		b.WriteString(color("\"%v\"", j.Str))
@@ -176,7 +177,7 @@ func toDoc(j gjson.Result) p.Doc {
 		return p.TextWithLength(color(str), length)
 	case gjson.Number:
 		color := coloring.Number
-		str := fmt.Sprintf("%v", j.Num)
+		str := formatNum(j.Num)
 		length := len([]rune(str))
 		return p.TextWithLength(color(str), length)
 	case gjson.String:
@@ -208,4 +209,9 @@ func allValuesAreScalar(m map[string]gjson.Result) bool {
 		}
 	}
 	return true
+}
+
+func formatNum(num float64) string {
+	data, _ := json.Marshal(num)
+	return string(data)
 }

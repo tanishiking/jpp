@@ -22,6 +22,12 @@ https://github.com/tanishiking/jpp/releases
 $ go get -u github.com/tanishiking/jpp/cmd/jpp
 ```
 
+### Develop
+```
+$ curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+$ dep ensure
+$ go test .
+
 ## jpp command
 ### Options
 - `-w`: width (default: your terminal width)
