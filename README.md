@@ -23,10 +23,10 @@ $ go get -u github.com/tanishiking/jpp/cmd/jpp
 ```
 
 ### Develop
+```sh
+$ make build # build binary into ./bin/jpp
+$ make test # run all unit tests
 ```
-$ curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-$ dep ensure
-$ go test .
 
 ## jpp command
 ### Options
