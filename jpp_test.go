@@ -315,3 +315,32 @@ func TestPretty_JSONObject_TryToFitInSingleLine_Nested(t *testing.T) {
 		t.Errorf("expected: %v, actual: %v", expected, actual)
 	}
 }
+
+func TestPretty_Num(t *testing.T) {
+	var orig string
+	var actual string
+
+	orig = `{"top": 1234567890}`
+	actual, _ = jpp.Pretty(orig, "  ", 100, nil)
+	if orig != actual {
+		t.Errorf("expected: %v, actual: %v", orig, actual)
+	}
+
+	orig = `1234567890`
+	actual, _ = jpp.Pretty(orig, "  ", 100, nil)
+	if orig != actual {
+		t.Errorf("expected: %v, actual: %v", orig, actual)
+	}
+
+	orig = `1.23456789e+99`
+	actual, _ = jpp.Pretty(orig, "  ", 100, nil)
+	if orig != actual {
+		t.Errorf("expected: %v, actual: %v", orig, actual)
+	}
+
+	orig = `123.456`
+	actual, _ = jpp.Pretty(orig, "  ", 100, nil)
+	if orig != actual {
+		t.Errorf("expected: %v, actual: %v", orig, actual)
+	}
+}
