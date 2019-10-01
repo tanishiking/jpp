@@ -5,8 +5,7 @@ GO=go
 all: clean build
 
 deps:
-	go get -u github.com/golang/dep/cmd/dep
-	dep ensure
+	go mod vendor
 
 build: deps
 	${GO} build -o ${BUILD_OUTPUT}/${BIN} ./cmd/jpp
