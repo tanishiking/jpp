@@ -7,6 +7,6 @@ require (
 	github.com/tanishiking/prettier v0.0.0-20181028071009-4132cf1d9a0c
 	github.com/tidwall/gjson v1.1.3
 	github.com/tidwall/match v1.0.1 // indirect
-	golang.org/x/crypto v0.0.0-20181203042331-505ab145d0a9
-	golang.org/x/sys v0.0.0-20181212120007-b05ddf57801d // indirect
+	golang.org/x/crypto v0.0.0-20191001103751-88343688bb37
+	golang.org/x/sys v0.0.0-20190927073244-c990c680b611 // indirect
 )
