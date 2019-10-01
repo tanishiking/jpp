@@ -1,7 +1,7 @@
 language: go
 go:
-  - 1.11
+  - 1.12
 script:
-  - make test
-  - make lint
-  - make cross
+  - GO111MODULE=on make test
+  - GO111MODULE=on make lint
+  - GO111MODULE=on make cross
