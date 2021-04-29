@@ -1,0 +1,15 @@
+version: 2
+updates:
+- package-ecosystem: gomod
+  directory: "/"
+  schedule:
+    interval: weekly
+    time: "20:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: github.com/tidwall/gjson
+    versions:
+    - 1.6.7
+    - 1.6.8
+    - 1.7.1
+    - 1.7.4
